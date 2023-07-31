@@ -341,6 +341,38 @@ def parse_arguments():
         help="Define the image mode to be used. RGB is default, L means 8-bit grayscale images, 1 means 1-bit binary images stored with one pixel per byte, etc.",
         default="RGB",
     )
+    parser.add_argument(
+        "-ex",
+        "--exclude",
+        type=str,
+        nargs="?",
+        help="Characters to exclude from the token pool if generating random strings.",
+        default="",
+    )
+    parser.add_argument(
+        "-x",
+        "--xtra",
+        type=str,
+        nargs="?",
+        help="Add extra characters to the token pool to alter the probabilities if generating random strings.",
+        default="",
+    )
+    parser.add_argument(
+        "-miw",
+        "--min_word_length",
+        type=int,
+        nargs="?",
+        help="Specify the minimum length of words if generating random strings.",
+        default=2,
+    )
+    parser.add_argument(
+        "-maw",
+        "--max_word_length",
+        type=int,
+        nargs="?",
+        help="Specify the maximum length of words if generating random strings.",
+        default=10,
+    )
     return parser.parse_args()
 
 
@@ -402,7 +434,12 @@ def main():
             args.include_letters,
             args.include_numbers,
             args.include_symbols,
+            args.case,
             args.language,
+            args.min_word_length,
+            args.max_word_length,
+            args.exclude,
+            args.xtra,
         )
         # Set a name format compatible with special characters automatically if they are used
         if args.include_symbols or True not in (

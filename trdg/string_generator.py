@@ -79,7 +79,12 @@ def create_strings_randomly(
     let: bool,
     num: bool,
     sym: bool,
+    casing: str,
     lang: str,
+    min_len: int,
+    max_len: int,
+    exclude: str,
+    xtra: str,
 ) -> List[str]:
     """
     Create all strings by randomly sampling from a pool of characters.
@@ -113,11 +118,20 @@ def create_strings_randomly(
             )  # unicode range for common and uncommon kanji
             # https://stackoverflow.com/questions/19899554/unicode-range-for-japanese
         else:
-            pool += string.ascii_letters
+            if casing == "upper":
+                pool += string.ascii_letters[26:]
+            elif casing == "lower":
+                pool += string.ascii_letters[:26]
+            else:
+                pool += string.ascii_letters
     if num:
         pool += "0123456789"
     if sym:
         pool += "!\"#$%&'()*+,-./:;?@[\\]^_`{|}~"
+
+    pool += xtra
+    for ch in exclude:
+        pool = pool.replace(ch, "")
 
     if lang == "cn":
         min_seq_len = 1
@@ -126,8 +140,8 @@ def create_strings_randomly(
         min_seq_len = 1
         max_seq_len = 2
     else:
-        min_seq_len = 2
-        max_seq_len = 10
+        min_seq_len = min_len
+        max_seq_len = max_len
 
     strings = []
     for _ in range(0, count):
